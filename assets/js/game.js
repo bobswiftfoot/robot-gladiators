@@ -53,7 +53,7 @@ var enemyInfo =
       name: "Robo Trumble",
       attack: randomNumber(10, 14)
     }
- ];
+ ]
 
  //Main Loop
 function startGame()
@@ -93,21 +93,9 @@ function fight(enemy)
 {
     while(enemy.health > 0 && playerInfo.health > 0)
     {
-        var promptFight = window.prompt("Would you like to FIGHT or SKIP this battle? Enter 'FIGHT' or 'SKIP' to choose.");
-        if(promptFight === "skip" || promptFight === "SKIP")
+        if(fightOrSkip())
         {
-            var confirmSkip = window.confirm("Are you sure you'd like to quit?");
-
-            if(confirmSkip)
-            {
-                window.alert(playerInfo.name + " has chosen to skip the fight!");
-                playerMoney = Math.max(0, playerInfo.money - 10);
-                break;
-            }
-            else
-            {
-                fight();
-            }
+            break;
         }
 
         var damage = randomNumber(playerInfo.attack - 3, playerInfo.attack);
@@ -202,7 +190,7 @@ function randomNumber(min, max)
     var value = Math.floor(Math.random() * (max - min + 1)) + min;
   
     return value;
- };
+ }
 
  // function to set name
 function getPlayerName()
@@ -216,6 +204,38 @@ function getPlayerName()
 
     console.log("Your robot's name is " + name);
     return name;
-  };
+}
+
+var fightOrSkip = function() 
+{
+    // ask player if they'd like to fight or skip using fightOrSkip function
+    var promptFight = window.prompt('Would you like to FIGHT or SKIP this battle? Enter "FIGHT" or "SKIP" to choose.');
+  
+    if (!promptFight) 
+    {
+        window.alert("You need to provide a valid answer! Please try again.");
+        return fightOrSkip();
+    }
+
+    promptFight = promptFight.toLowerCase();
+  
+    // if player picks "skip" confirm and then stop the loop
+    if (promptFight === "skip")
+    {
+        // confirm player wants to skip
+        var confirmSkip = window.confirm("Are you sure you'd like to quit?");
+    
+        // if yes (true), leave fight
+        if (confirmSkip) 
+        {
+            window.alert(playerInfo.name + " has decided to skip this fight. Goodbye!");
+            // subtract money from playerMoney for skipping
+            playerInfo.playerMoney = playerInfo.money - 10;
+
+            return true;
+        }
+    }
+    return false;
+}
 
 startGame();
